@@ -17,6 +17,9 @@ public class CourierData {
         this.password = password;
     }
 
+    public CourierData() {
+    }
+
     public String getLogin() {
         return login;
     }
