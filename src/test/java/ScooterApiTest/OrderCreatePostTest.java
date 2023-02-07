@@ -55,6 +55,7 @@ public class OrderCreatePostTest {
                 .and()
                 .statusCode(201);
 
+        /** Clear test data */
         //Cancel order
         int trackNumber = newOrder.then().extract().path("track");
         given().header("Content-type", "application/json").when().put(String.format("/api/v1/orders/cancel?track=%s", trackNumber));

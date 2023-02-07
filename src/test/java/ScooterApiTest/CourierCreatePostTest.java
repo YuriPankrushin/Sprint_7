@@ -67,7 +67,7 @@ public class CourierCreatePostTest {
                         .when()
                         .post("/api/v1/courier");
 
-        //Check successful and correct response
+        //Check fail message and correct response code
         postNewCourier.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"))
                 .and()
                 .statusCode(400);
@@ -88,7 +88,7 @@ public class CourierCreatePostTest {
                         .when()
                         .post("/api/v1/courier");
 
-        //Check successful and correct response
+        //Check fail message and correct response code
         postNewCourier.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"))
                 .and()
                 .statusCode(400);
@@ -122,7 +122,7 @@ public class CourierCreatePostTest {
                         .when()
                         .post("/api/v1/courier");
 
-        //Check successful and correct response
+        //Check fail message and correct response code
         postNewCourierWithSameCreds.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."))
                 .and()
                 .statusCode(409);
