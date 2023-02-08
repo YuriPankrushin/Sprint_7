@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
 
@@ -42,7 +45,7 @@ public class CourierLoginPostTest {
         //Check that courier id was given and has response has correct code
         courierLogin.then().assertThat().body("$", hasKey("id"))
                 .and()
-                .statusCode(200);
+                .statusCode(SC_OK);
 
         /** Clear test data */
         //Extract courier id value from courierLogin response body
@@ -69,7 +72,7 @@ public class CourierLoginPostTest {
         //Check that login failed and has correct response code
         courierLogin.then().assertThat().body("message", equalTo("Учетная запись не найдена"))
                 .and()
-                .statusCode(404);
+                .statusCode(SC_NOT_FOUND);
     }
 
     @Test
@@ -89,7 +92,7 @@ public class CourierLoginPostTest {
         //Check that login failed and has correct response code
         courierLogin.then().assertThat().body("message", equalTo("Недостаточно данных для входа"))
                 .and()
-                .statusCode(400);
+                .statusCode(SC_BAD_REQUEST);
     }
 
     @Test
@@ -109,6 +112,6 @@ public class CourierLoginPostTest {
         //Check that login failed and has correct response code
         courierLogin.then().assertThat().body("message", equalTo("Недостаточно данных для входа"))
                 .and()
-                .statusCode(400);
+                .statusCode(SC_BAD_REQUEST);
     }
 }

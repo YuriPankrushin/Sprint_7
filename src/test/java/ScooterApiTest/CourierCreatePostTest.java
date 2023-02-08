@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_CONFLICT;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.equalTo;
 
 public class CourierCreatePostTest {
@@ -36,7 +39,7 @@ public class CourierCreatePostTest {
         //Check successful and correct response
         postNewCourier.then().assertThat().body("ok", equalTo(true))
                 .and()
-                .statusCode(201);
+                .statusCode(SC_CREATED);
 
         /** Clean test data **/
         //Login to take courier id
@@ -70,7 +73,7 @@ public class CourierCreatePostTest {
         //Check fail message and correct response code
         postNewCourier.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"))
                 .and()
-                .statusCode(400);
+                .statusCode(SC_BAD_REQUEST);
     }
 
     @Test
@@ -91,7 +94,7 @@ public class CourierCreatePostTest {
         //Check fail message and correct response code
         postNewCourier.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"))
                 .and()
-                .statusCode(400);
+                .statusCode(SC_BAD_REQUEST);
     }
 
     @Test
@@ -112,7 +115,7 @@ public class CourierCreatePostTest {
         //Check successful and correct response
         postNewCourier.then().assertThat().body("ok", equalTo(true))
                 .and()
-                .statusCode(201);
+                .statusCode(SC_CREATED);
 
         //Send second create courier request with the same courier credentials as before
         Response postNewCourierWithSameCreds =
@@ -125,7 +128,7 @@ public class CourierCreatePostTest {
         //Check fail message and correct response code
         postNewCourierWithSameCreds.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."))
                 .and()
-                .statusCode(409);
+                .statusCode(SC_CONFLICT);
 
         /** Clean test data **/
         //Login to take courier id

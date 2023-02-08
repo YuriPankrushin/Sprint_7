@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -141,7 +142,7 @@ public class OrdersListGetTest {
         /** Test */
         Response response = given().queryParam("courierId", courierId).get("/api/v1/orders");
         response.then().assertThat()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .and()
                 .body("pageInfo.total", equalTo(3));
 

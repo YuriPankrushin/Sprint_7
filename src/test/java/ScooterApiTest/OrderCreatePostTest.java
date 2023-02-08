@@ -13,6 +13,7 @@ import org.junit.runners.Parameterized;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.hasKey;
 
 @RunWith(Parameterized.class)
@@ -28,6 +29,7 @@ public class OrderCreatePostTest {
     public static Object[][] getTestData() {
         return new Object[][] {
                 {new OrderData("Юрий", "Панкрушин", "Москва, Красная площадь, 1", "32", "79267777777", 7, "2023-02-15", "Сдачу оставь себе", List.of("GREY", "BLACK"))},
+                {new OrderData("Юрий", "Панкрушин", "Москва, Красная площадь, 1", "32", "79267777777", 5, "2023-02-15", "Сдачу оставь себе", List.of("BLACK"))},
                 {new OrderData("Юрий", "Панкрушин", "Москва, Красная площадь, 1", "32", "79267777777", 3, "2023-02-15", "Сдачу оставь себе", List.of("GREY"))},
                 {new OrderData("Юрий", "Панкрушин", "Москва, Красная площадь, 1", "32", "79267777777", 1, "2023-02-15", "Сдачу оставь себе", null)},
         };
@@ -53,7 +55,7 @@ public class OrderCreatePostTest {
         //Check successful and correct response
         newOrder.then().assertThat().body("$", hasKey("track"))
                 .and()
-                .statusCode(201);
+                .statusCode(SC_CREATED);
 
         /** Clear test data */
         //Cancel order
