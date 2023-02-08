@@ -30,11 +30,6 @@ public class CourierCreatePostTest extends BaseTest {
         CourierData courierLoginData = new CourierData("yuri", "12345");
         courierApi.courierLogin(courierLoginData);
         courierApi.courierDelete(courierLoginData);
-        //Extract courier id value from courierLogin response body
-        //int courierId = courierLogin.then().extract().path("id");
-        //Delete courier
-//        given(baseApi.requestSpecification).header("Content-type", "application/json").
-//                pathParam(":id", String.valueOf(courierId)).when().delete("/api/v1/courier/{:id}");
     }
 
     @Test

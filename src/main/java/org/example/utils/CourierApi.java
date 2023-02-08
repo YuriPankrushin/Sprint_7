@@ -7,13 +7,17 @@ import static io.restassured.RestAssured.given;
 
 public class CourierApi extends BaseApi {
 
+    final static String CREATE = "/api/v1/courier";
+    final static String LOGIN = "/api/v1/courier/login";
+    final static String DELETE = "/api/v1/courier/{:id}";
+
     //Создать курьера
     public Response courierCreate(CourierData courierData) {
         return given(requestSpecification)
                         .header("Content-type", "application/json")
                         .body(courierData)
                         .when()
-                        .post("/api/v1/courier");
+                        .post(CREATE);
     }
 
     //Авторизоваться курьером
@@ -22,7 +26,7 @@ public class CourierApi extends BaseApi {
                 .header("Content-type", "application/json")
                 .body(courierLoginData)
                 .when()
-                .post("/api/v1/courier/login");
+                .post(LOGIN);
     }
 
     //Узнать id курьера
@@ -33,6 +37,6 @@ public class CourierApi extends BaseApi {
     //Удаление курьера
     public void courierDelete(CourierData courierLoginData){
         given(requestSpecification).header("Content-type", "application/json").
-                pathParam(":id", String.valueOf(getCourierId(courierLoginData))).when().delete("/api/v1/courier/{:id}");
+                pathParam(":id", String.valueOf(getCourierId(courierLoginData))).when().delete(DELETE);
     }
 }

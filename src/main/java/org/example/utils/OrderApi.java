@@ -7,13 +7,19 @@ import static io.restassured.RestAssured.given;
 
 public class OrderApi extends BaseApi {
 
+    final static String CREATE = "/api/v1/orders";
+    final static String CANCEL = "/api/v1/orders/cancel?track=";
+    final static String ORDERS = "/api/v1/orders";
+    final static String ORDER = "/api/v1/orders/track?t=";
+    final static String ACCEPT = "/api/v1/orders/accept/";
+
     //Создать заказ
     public Response orderCreate(OrderData orderData) {
         return given(requestSpecification)
                 .header("Content-type", "application/json")
                 .body(orderData)
                 .when()
-                .post("/api/v1/orders");
+                .post(CREATE);
     }
 
     //Узнать трек номер заказа
@@ -26,17 +32,17 @@ public class OrderApi extends BaseApi {
         return given(requestSpecification)
                 .header("Content-type", "application/json")
                 .when()
-                .put(String.format("/api/v1/orders/cancel?track=%s", getOrderTrackNumber(orderData)));
+                .put(String.format(CANCEL + "%s", getOrderTrackNumber(orderData)));
     }
 
     //Получить все заказы
     public Response getAllOrders() {
-        return given(requestSpecification).get("/api/v1/orders");
+        return given(requestSpecification).get(ORDERS);
     }
 
     //Получить заказы курьера
     public Response getCourierOrders(int courierId) {
-        return given(requestSpecification).queryParam("courierId", courierId).get("/api/v1/orders");
+        return given(requestSpecification).queryParam("courierId", courierId).get(ORDERS);
     }
 
     //Получить заказ по его номеру
@@ -44,7 +50,7 @@ public class OrderApi extends BaseApi {
         return given(requestSpecification)
                 .header("Content-type", "application/json")
                 .when()
-                .get(String.format("/api/v1/orders/track?t=%s", getOrderTrackNumber(orderData)));
+                .get(String.format(ORDER + "%s", getOrderTrackNumber(orderData)));
     }
 
     //Получить id заказа по его трек номеру
@@ -57,6 +63,6 @@ public class OrderApi extends BaseApi {
         given(requestSpecification)
                 .header("Content-type", "application/json")
                 .when()
-                .put(String.format("/api/v1/orders/accept/%s?courierId=%s", getOrderIdWithTrackNumber(orderData), courierId));
+                .put(String.format(ACCEPT + "%s?courierId=%s", getOrderIdWithTrackNumber(orderData), courierId));
     }
 }

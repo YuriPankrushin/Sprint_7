@@ -6,7 +6,6 @@ import io.restassured.response.Response;
 import org.example.CourierData;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -33,13 +32,7 @@ public class CourierLoginPostTest extends BaseTest {
                 .statusCode(SC_OK);
 
         /** Clear test data */
-        //Extract courier id value from courierLogin response body
-//        int courierId = courierLogin.then().extract().path("id");
-//        //Delete courier
-//        given(baseApi.requestSpecification).header("Content-type", "application/json").
-//                pathParam(":id", String.valueOf(courierId)).when().delete("/api/v1/courier/{:id}");
         courierApi.courierDelete(courierLoginData);
-
     }
 
     @Test
