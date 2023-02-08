@@ -17,7 +17,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.hasKey;
 
 @RunWith(Parameterized.class)
-public class OrderCreatePostTest {
+public class OrderCreatePostTest extends BaseTest {
 
     private final OrderData orderData;
 
@@ -35,31 +35,19 @@ public class OrderCreatePostTest {
         };
     }
 
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-    }
-
     @Test
     @DisplayName("Создать заказ")
     @Description("Проверить, что заказ успешно создан")
     public void checkThatOrderWasCreatedWithTrackValue() {
-        //Send create order request
-        Response newOrder =
-                given()
-                        .header("Content-type", "application/json")
-                        .body(orderData)
-                        .when()
-                        .post("/api/v1/orders");
-
-        //Check successful and correct response
+        //Создать заказ
+        Response newOrder = orderApi.orderCreate(orderData);
+        //Проверить, что ответ содержит трек номер и правильный статус код
         newOrder.then().assertThat().body("$", hasKey("track"))
                 .and()
                 .statusCode(SC_CREATED);
 
         /** Clear test data */
-        //Cancel order
-        int trackNumber = newOrder.then().extract().path("track");
-        given().header("Content-type", "application/json").when().put(String.format("/api/v1/orders/cancel?track=%s", trackNumber));
+        //Отменить заказ
+        orderApi.orderCancel(orderData);
     }
 }
