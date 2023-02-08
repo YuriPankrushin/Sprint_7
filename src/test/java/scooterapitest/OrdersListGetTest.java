@@ -3,30 +3,35 @@ package scooterapitest;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
+import io.restassured.internal.RequestSpecificationImpl;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.example.CourierData;
 import org.example.OrderData;
+import org.example.utils.BaseApi;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.requestSpecification;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class OrdersListGetTest {
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-    }
+//    @Before
+//    public void setUp() {
+//        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
+//    }
 
     @Test
     @DisplayName("Получить список заказов без указания параметров фильтрации")
     @Description("Проверить, что метод возвращает не пустой список заказов, если не указываются параметры фильтрации")
     public void checkThatOrdersListWithoutParamsHasData() {
-        Response response = given().get("/api/v1/orders");
+        BaseApi baseApi = new BaseApi();
+        Response response = given(baseApi.requestSpecification).get("/api/v1/orders");
         response.then().assertThat().body(notNullValue());
     }
 
