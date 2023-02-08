@@ -2,17 +2,15 @@ package scooterapitest;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.example.OrderData;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.hasKey;
 
@@ -25,6 +23,7 @@ public class OrderCreatePostTest extends BaseTest {
         this.orderData = orderData;
     }
 
+    /** Тестовые данные */
     @Parameterized.Parameters
     public static Object[][] getTestData() {
         return new Object[][] {
@@ -33,6 +32,13 @@ public class OrderCreatePostTest extends BaseTest {
                 {new OrderData("Юрий", "Панкрушин", "Москва, Красная площадь, 1", "32", "79267777777", 3, "2023-02-15", "Сдачу оставь себе", List.of("GREY"))},
                 {new OrderData("Юрий", "Панкрушин", "Москва, Красная площадь, 1", "32", "79267777777", 1, "2023-02-15", "Сдачу оставь себе", null)},
         };
+    }
+
+    @After
+    public void testDataClear(){
+        /** Удаление тестовых данных */
+        //Удаление заказов
+        orderApi.orderCancel(orderData);
     }
 
     @Test
@@ -45,9 +51,5 @@ public class OrderCreatePostTest extends BaseTest {
         newOrder.then().assertThat().body("$", hasKey("track"))
                 .and()
                 .statusCode(SC_CREATED);
-
-        /** Clear test data */
-        //Отменить заказ
-        orderApi.orderCancel(orderData);
     }
 }

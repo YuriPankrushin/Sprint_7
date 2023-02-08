@@ -4,6 +4,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.example.CourierData;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
@@ -14,25 +15,31 @@ import static org.hamcrest.Matchers.hasKey;
 
 public class CourierLoginPostTest extends BaseTest {
 
+    /** Тестовые данные */
+    //Создание курьера
+    static CourierData courierJoraData = new CourierData("jora991", "12345", "Жора");
+    //Данные для авторизации курьера
+    static CourierData courierJoraLoginData = new CourierData("jora991", "12345");
+
+    @AfterClass
+    public static void testDataClear(){
+        /** Удаление тестовых данных */
+        //Удаление курьера
+        courierApi.courierDelete(courierJoraLoginData);
+    }
+
     @Test
     @DisplayName("Успешная авторизация")
     @Description("Успешно авторизоваться под существующим курьером")
     public void checkThatCourierCouldLogInToTheApp() {
-        //Данные курьера
-        CourierData courierData = new CourierData("jora", "12345", "Жора");
         //Создать курьера
-        courierApi.courierCreate(courierData);
-
+        courierApi.courierCreate(courierJoraData);
         //Авторизация курьера с существующими данными
-        CourierData courierLoginData = new CourierData("jora", "12345");
-        Response courierLogin = courierApi.courierLogin(courierLoginData);
+        Response courierLogin = courierApi.courierLogin(courierJoraLoginData);
         //Проверить, что ответ содержит поле id и правильный статус код
         courierLogin.then().assertThat().body("$", hasKey("id"))
                 .and()
                 .statusCode(SC_OK);
-
-        /** Clear test data */
-        courierApi.courierDelete(courierLoginData);
     }
 
     @Test

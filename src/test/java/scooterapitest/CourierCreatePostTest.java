@@ -4,6 +4,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.example.CourierData;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
@@ -13,23 +14,34 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class CourierCreatePostTest extends BaseTest {
 
+    /** Тестовые данные */
+    //Создание курьеров
+    static CourierData courierFernando = new CourierData("fernando991", "12345", "Фернандо");
+    static CourierData courierSergio = new CourierData("sergio991", "12345", "Серхио");
+
+    //Данные для авторизации курьеров
+    static CourierData courierFernandoLoginData = new CourierData("fernando991", "12345");
+    static CourierData courierSergioLoginData = new CourierData("sergio991", "12345");
+
+
+    @AfterClass
+    public static void testDataClear(){
+        /** Удаление тестовых данных */
+        //Удаление курьеров
+        courierApi.courierDelete(courierFernandoLoginData);
+        courierApi.courierDelete(courierSergioLoginData);
+    }
+
     @Test
     @DisplayName("Успешное создание курьера")
     @Description("Успешно создать курьера с указанием логина, пароля и имени пользователя")
     public void checkThatCourierCouldBeCreated() {
-        //Данные курьера
-        CourierData courierData = new CourierData("yuri", "12345", "Юрий");
         //Создать курьера
-        Response postNewCourier = courierApi.courierCreate(courierData);
+        Response postNewCourier = courierApi.courierCreate(courierFernando);
         //Проверить, что вернулся правильный ответ и статус код
         postNewCourier.then().assertThat().body("ok", equalTo(true))
                 .and()
                 .statusCode(SC_CREATED);
-
-        /** Clean test data **/
-        CourierData courierLoginData = new CourierData("yuri", "12345");
-        courierApi.courierLogin(courierLoginData);
-        courierApi.courierDelete(courierLoginData);
     }
 
     @Test
@@ -64,25 +76,18 @@ public class CourierCreatePostTest extends BaseTest {
     @DisplayName("Создание нового курьера с данными имеющегося курьера")
     @Description("Проверить, что нельзя создать двух курьеров с одинаковыми входными данными")
     public void checkThatImpossibleToCreateTwoCouriersWithSameCredentials() {
-        //Данные курьера
-        CourierData courierData = new CourierData("yuri", "12345", "Юрий");
         //Создать курьера
-        Response postNewCourier = courierApi.courierCreate(courierData);
+        Response postNewCourier = courierApi.courierCreate(courierSergio);
         //Проверить, что вернулся правильный ответ и статус код
         postNewCourier.then().assertThat().body("ok", equalTo(true))
                 .and()
                 .statusCode(SC_CREATED);
 
         //Создать курьера с данными первого курьера
-        Response postNewCourierWithSameCreds = courierApi.courierCreate(courierData);
+        Response postNewCourierWithSameCreds = courierApi.courierCreate(courierSergio);
         //Проверить, что вернулся правильный ответ и статус код
         postNewCourierWithSameCreds.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."))
                 .and()
                 .statusCode(SC_CONFLICT);
-
-        /** Clean test data **/
-        CourierData courierLoginData = new CourierData("yuri", "12345");
-        courierApi.courierLogin(courierLoginData);
-        courierApi.courierDelete(courierLoginData);
     }
 }
